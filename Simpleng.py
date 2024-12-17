@@ -136,7 +136,7 @@ def output_text():
 
 def main():
     # Side bar
-    sidebar()
+    # sidebar()
 
     # Input text
     input_text()
