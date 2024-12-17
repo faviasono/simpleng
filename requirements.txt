@@ -1,5 +1,5 @@
 pyperclip
-streamlit-extra
+streamlit-extras
 python-dotenv
 Requests
 setuptools
