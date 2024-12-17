@@ -5,6 +5,7 @@ from simpleng.llm.llm import LLM
 import pyperclip
 from dotenv import load_dotenv
 from os.path import join, dirname
+import streamlit_scrollable_textbox as stx
 
 load_dotenv(join(dirname(__file__), "/Users/andreafavia/development/simpleng/.env"))
 
@@ -24,9 +25,12 @@ if "difficult_words" not in st.session_state:
     st.session_state.difficult_words = None
 llm = LLM()
 
+STATIC_FILE = "../simpleng/simpleng/assets/example.txt"
+
 
 def input_text():
     st.title("SimplEng 🇬🇧 \n Just Simplify English ")
+    st.sidebar.title("SimplEng 🇬🇧 \n Just Simplify English ")
 
     with st.form(key="input_form", clear_on_submit=True):
         text = st.text_input(
@@ -143,8 +147,13 @@ def main():
 
     st.divider()
 
-    # Check text
-    # check_text() #TODO: disable for dev
+    example_container = st.sidebar.container()
+    with example_container:
+        stx.scrollableTextbox(open(f"{STATIC_FILE}").read(), height=300)
+        if st.sidebar.button("Try with the example"):
+            st.session_state.input_text = open(f"{STATIC_FILE}").read()
+
+            pass
 
     output_text()
 
