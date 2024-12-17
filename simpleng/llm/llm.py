@@ -2,7 +2,6 @@ import os
 from os.path import join, dirname
 import google.generativeai as genai
 from dotenv import load_dotenv
-from bookai.models.base_summarizer import SummarizerBaseModel
 import json
 
 # Load the environment variables
