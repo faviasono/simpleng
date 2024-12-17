@@ -8,3 +8,4 @@ __pycache__/
 
 .DS_Store
 __pycache__/
+simpleng/llm/__pycache__/llm.cpython-310.pyc
