@@ -27,6 +27,18 @@ llm = LLM()
 
 STATIC_FILE = "../simpleng/simpleng/assets/example.txt"
 
+# add a jscript function to copy to clipboard
+st.markdown(
+    """
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+        }
+    </script>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 def input_text():
     st.title("SimplEng 🇬🇧 \n Just Simplify English ")
@@ -76,9 +88,7 @@ def check_text():
             st.error("There's no enough words in this sentence, please provide a longer sentence.")
 
 
-@st.fragment
 def copy_to_clipboard(text):
-    pyperclip.copy(text)
     st.success("Text copied to clipboard")
 
 
@@ -101,29 +111,20 @@ def output_text():
 
     try:
         if st.session_state.output_text:
-            with st.expander("original text", expanded=True, icon="⬇"):
+            with st.expander("original text", expanded=False, icon="⬇"):
                 st.write(st.session_state.older_input_text)
             with st.expander("simplenged text", expanded=True, icon="⬇"):
-                st.write(st.session_state.output_text)
+                st.code(st.session_state.output_text, wrap_lines=True, language="text")
 
             with st.sidebar.expander("**Difficult words**", expanded=True):
-                str_diff = ""
                 for obj in st.session_state.difficult_words:
                     word, meaning = obj.get("word"), obj.get("meaning")
-                    st.markdown(f" **{word}**: {meaning}")
-                    str_diff += f"{word}: {meaning} \n"
-                if st.session_state.difficult_words and st.sidebar.button("copy", key="diff"):
-                    copy_to_clipboard(str_diff)
+                    st.code(f" {word.title()}: {meaning}", language="text", wrap_lines=True)
 
             with st.sidebar.expander("**Phrasal verbs**", expanded=True):
-                str_prhasal = ""
                 for obj in st.session_state.phrasal:
                     verb, meaning = obj.get("verb"), obj.get("meaning")
-                    st.markdown(f" **{verb}**: {meaning}")
-                    str_prhasal += f"{verb}: {meaning} \n"
-
-                if st.session_state.phrasal and st.sidebar.button("copy", key="phrascopyal"):
-                    copy_to_clipboard(str_prhasal)
+                    st.code(f" {verb.title()}: {meaning}", language="text", wrap_lines=True)
 
             st.sidebar.divider()
 
@@ -132,8 +133,6 @@ def output_text():
                     time.sleep(2)
                     st.success("Data has been saved")
 
-            if not st.session_state.user and st.button("Copy simplified text to clipboard"):
-                copy_to_clipboard(st.session_state.output_text)
     except Exception as e:
         st.error("An error occurred, please try again")
 
