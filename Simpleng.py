@@ -102,11 +102,12 @@ def output_text():
         st.header("Results ")
         with st.spinner("Simplifying text ..."):
             output = get_result_llm(st.session_state.input_text)
+            print(output)
             st.session_state.older_input_text = st.session_state.input_text
             st.session_state.input_text = None
 
         st.session_state.output_text = output.get("simplified_text")
-        st.session_state.phrasal = output.get("phrasal_verbs")
+        st.session_state.phrasal = output.get("phrasal_verbs") or output.get("phrasal") or output.get("verbs")
         st.session_state.difficult_words = output.get("difficult_words")
 
     try:
@@ -123,7 +124,7 @@ def output_text():
 
             with st.sidebar.expander("**Phrasal verbs**", expanded=True):
                 for obj in st.session_state.phrasal:
-                    verb, meaning = obj.get("verb"), obj.get("meaning")
+                    verb, meaning = obj.get("verb") or obj.get("phrasal_verb"), obj.get("meaning")
                     st.code(f" {verb.title()}: {meaning}", language="text", wrap_lines=True)
 
             st.sidebar.divider()
@@ -134,7 +135,7 @@ def output_text():
                     st.success("Data has been saved")
 
     except Exception as e:
-        st.error("An error occurred, please try again")
+        st.error(f"An error occurred, please try again: {e}")
 
 
 def main():
